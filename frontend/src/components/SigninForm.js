@@ -52,6 +52,7 @@ function SigninForm() {
         navigate("/home");
       } catch (error) {
         console.error("Sign in failed", error.response.data);
+        navigate("/");
       }
     },
   });
