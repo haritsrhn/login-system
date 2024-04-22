@@ -1,5 +1,8 @@
 import * as React from "react";
-import axios from "axios";
+import axiosInstance from "../axios";
+import { useFormik } from "formik";
+import { useNavigate } from "react-router-dom";
+// Material UI
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -12,8 +15,6 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useFormik } from "formik";
-import { useNavigate } from "react-router-dom";
 
 function Copyright(props) {
   return (
@@ -44,12 +45,15 @@ function SigninForm() {
     },
     onSubmit: async (values) => {
       try {
-        const response = await axios.post(
-          "http://127.0.0.1:8000/api/signin/",
-          values
-        );
-        console.log("Sign in success", response.data);
-        navigate("/home");
+        await axiosInstance.post("token/", values).then((res) => {
+          console.log(res);
+          localStorage.setItem("access_token", res.data.access);
+          localStorage.setItem("refresh_token", res.data.refresh);
+          axiosInstance.defaults.headers["Authorization"] =
+            "JWT " + localStorage.getItem("access_token");
+          console.log("Sign in success", res.data);
+          navigate("/home");
+        });
       } catch (error) {
         console.error("Sign in failed", error.response.data);
         navigate("/");
@@ -84,7 +88,7 @@ function SigninForm() {
               required
               fullWidth
               id="email"
-              label="Email Address"
+              label="email"
               name="email"
               autoComplete="email"
               onChange={formik.handleChange}

@@ -1,5 +1,8 @@
 import * as React from "react";
-import axios from "axios";
+import axiosInstance from "../axios";
+import { useFormik } from "formik";
+import { useNavigate } from "react-router-dom";
+// Material UI
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -12,8 +15,6 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useFormik } from "formik";
-import { useNavigate } from "react-router-dom";
 
 function Copyright(props) {
   return (
@@ -46,8 +47,8 @@ function SignupForm() {
     },
     onSubmit: async (values) => {
       try {
-        const response = await axios.post(
-          "http://127.0.0.1:8000/api/signup/",
+        const response = await axiosInstance.post(
+          "register/",
           values
         );
         console.log("Signup successful", response.data);
